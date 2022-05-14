@@ -76,6 +76,7 @@ def evaluate(data_loader, model, device):
     # switch to evaluation mode
     model.eval()
 
+    pp = True
     for images, target in metric_logger.log_every(data_loader, 10, header):
         images = images.to(device, non_blocking=True)
         target = target.to(device, non_blocking=True)
@@ -84,6 +85,9 @@ def evaluate(data_loader, model, device):
         with torch.cuda.amp.autocast():
             output = model(images)
             loss = criterion(output, target)
+            if pp:
+              print(output)
+              pp=False
 
         acc1, acc5 = accuracy(output, target, topk=(1, 5))
 
